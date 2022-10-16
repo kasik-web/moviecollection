@@ -1,0 +1,422 @@
+﻿@model MyMovieCollection.Models.MovieDetails
+
+<style>
+    body {
+        background-color: #DCDCDC
+    }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #3d3d3d;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 0px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+ 
+<body>
+    <nav class="navbar bg-dark">
+        
+        <form class="container-fluid justify-content-start">
+            <a asp-action="MovieDetailsView" asp-route-id="@Model.Id" class="btn btn-outline-secondary" type="button">
+                <span style="color:grey"><i class="fa-solid fa-left"></i></span> Back
+            </a>
+            <h5 style="color: white">
+                Edit Movie Details
+            </h5>
+        </form>        
+    </nav>
+
+
+    <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Movie Details')" id="defaultOpen">Movie Details</button>
+    <button class="tablinks" onclick="openTab(event, 'Personal Details')">Personal Details</button>
+    <button class="tablinks" onclick="openTab(event, 'Links')">Links</button>
+    </div>
+<form method="post">
+    <input asp-for="@Model.Id" hidden />
+    <input asp-for="@Model.MovieId" hidden />
+    <input asp-for="@Model.Genres" hidden/>
+    <input asp-for="@Model.UserId" hidden/>
+
+    <div style="background-color: #ccc; border: 1px solid #bdbdbd" id="Movie Details" class="tabcontent text-center">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Movie Title</h6>
+                    <input asp-for="@Model.Title"
+                           style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 70%;
+                              height: calc(1.25rem + 10px)"
+                                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Original Title</h6>
+                    <input asp-for="@Model.OriginalTitle"
+                           style="
+                                  border: 1px solid #bdbdbd;
+                                  border-radius: 0.5rem;
+                                  width: 70%;
+                                  height: calc(1.25rem + 10px)"
+                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Company</h6>
+                    <input asp-for="@Model.Company"
+                           style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 70%;
+                              height: calc(1.25rem + 10px)"
+                                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Reliase Date</h6>
+                    <input asp-for="@Model.ReleasDate" type="date" id="Date"  style="
+                       border: 1px solid #bdbdbd;
+                       border-radius: 0.5rem;
+                       width: 70%;
+                       height: calc(1.25rem + 10px)" />
+                </div>          
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Country</h6>
+                    <input asp-for="@Model.Country"
+                           style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 70%;
+                              height: calc(1.25rem + 10px)"
+                           type="text"
+                           class="text-field__input" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Dration Time</h6>
+                    <input asp-for="@Model.DurationTime min." style="
+                           border: 1px solid #bdbdbd;
+                           border-radius: 0.5rem;
+                           width: 70%;
+                           height: calc(1.25rem + 10px)"
+                           class="text-field__input"
+                           type="text" />
+                </div>                
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Original Language</h6>
+                    <input asp-for="@Model.OriginalLang"
+                        style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 70%;
+                              height: calc(1.25rem + 10px)"
+                              type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Imdb ID</h6>
+                    <input asp-for="@Model.imdbId"
+                           style="
+                  border: 1px solid #bdbdbd;
+                  border-radius: 0.5rem;
+                  width: 70%;
+                  height: calc(1.25rem + 10px)"
+                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Imdb Rate</h6>
+                    <input asp-for="@Model.ImdbRate"
+                           style="
+                  border: 1px solid #bdbdbd;
+                  border-radius: 0.5rem;
+                  width: 70%;
+                  height: calc(1.25rem + 10px)"
+                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Director</h6>
+                    <input asp-for="@Model.Director"
+                           style="
+                  border: 1px solid #bdbdbd;
+                  border-radius: 0.5rem;
+                  width: 70%;
+                  height: calc(1.25rem + 10px)"
+                           type="text" />
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Actors</h6>
+                    <textarea asp-for="@Model.Actors" rows="@((Model.Actors.Length / 45) + 1)"
+                              style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 100%;
+                              type="textarea"
+                              class="textarea">
+                        </textarea>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 my-2">
+                    <h6>Description</h6>
+                    <textarea asp-for="@Model.Description" rows="@((Model.Description.Length / 45) + 1)"
+                              style="
+                              border: 1px solid #bdbdbd;
+                              border-radius: 0.5rem;
+                              width: 100%;
+                              type="textarea"
+                              class="textarea">
+                        </textarea>
+                </div>
+        </div>    
+    </div>
+
+    <div style="background-color: #ccc; border: 1px solid #bdbdbd" id="Personal Details" class="tabcontent text-center">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Location</h6>
+                <input asp-for="@Model.Location"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Owner</h6>
+                <input asp-for="@Model.Owner"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Date</h6>
+                <input asp-for="@Model.PurchasedDate" type="date" id="Date" style="
+                       border: 1px solid #bdbdbd;
+                       border-radius: 0.5rem;
+                       width: 70%;
+                       height: calc(1.25rem + 10px)" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Store</h6>
+                <input asp-for="@Model.PurchaseStore"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Price</h6>
+                <input asp-for="@Model.PurchasePrice"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="number"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Quantity</h6>
+                <input asp-for="@Model.Quantity"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="number"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <div class="form-group">
+                    <h6>Viewed?</h6>
+                    <label class="switch">
+                        <input asp-for="@Model.Seen" type="checkbox" name="Seen" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Comments</h6>
+                @if (Model.Comments == null)
+                {
+                    <textarea asp-for="@Model.Comments"
+                          style="
+                          border: 1px solid #bdbdbd;
+                          border-radius: 0.5rem;
+                          width: 100%;
+                          type="textarea"
+                          class="textarea">
+                        </textarea>
+                }
+                else
+                {
+                    <textarea asp-for="@Model.Comments"
+                          rows="@(((Model.Comments.Length / 45) + 1))"
+                          style="
+                          border: 1px solid #bdbdbd;
+                          border-radius: 0.5rem;
+                          width: 100%;
+                          type="textarea"
+                          class="textarea">
+                        </textarea>
+                }
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div style="background-color: #ccc; border: 1px solid #bdbdbd" id="Links" class="tabcontent text-center">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Poster Link</h6>
+                <input asp-for="@Model.PosterUrl"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Backdrop Link</h6>
+                <input asp-for="@Model.BackdropUrl"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div> 
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Trailer Link</h6>
+                <input asp-for="@Model.TrailerUrl"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+        </div>        
+    </div>   
+        
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4 offset-sm-6 offset-lg-6 offset-xl-8 my-1">
+                <input type="submit" class="btn btn-success w-100" value="Save changes" />
+            </div>
+        </div>   
+</form>
+</body>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />   
+
+    <script>
+        function openTab(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }        
+        document.getElementById("defaultOpen").click();
+    </script>
+}

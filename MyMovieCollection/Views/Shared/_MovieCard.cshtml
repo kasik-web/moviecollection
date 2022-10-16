@@ -1,0 +1,34 @@
+﻿@model MyMovieCollection.Models.MovieDetails
+
+<style>
+    .filter {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+</style>
+
+<div class="col-lg-2 col-md-4 col-sm-6 col-6 offset-sm-0 offset-3 filter @Model.Genres ">
+        <input asp-for="@Model.Id" hidden />
+            <a asp-action="MovieDetailsView" asp-route-id="@Model.Id">
+                <div class="card text-bg-dark m-1">
+                        <img src="@Model.PosterUrl"
+                            height="300px"
+                            width="240px"
+                            class="card-img"
+                            alt="@Model.Title" />
+            
+                    <div class="card-img-overlay">
+                        @if (Model.Seen)
+                        {
+                            <span style="color: green; position: absolute; top: 0px; left: 1px;">
+                                <i class="fa-solid fa-square-check fa-2x"></i>
+                            </span>
+                        }
+                       
+                    </div>
+                </div>
+            </a>
+    </div>

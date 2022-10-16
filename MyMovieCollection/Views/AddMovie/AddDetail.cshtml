@@ -1,0 +1,191 @@
+﻿@model MyMovieCollection.Models.MovieDetails
+
+<style>
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #3d3d3d;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 0px;
+      bottom: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 24px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+</style>
+
+
+<form method="post" asp-action="PreFillMovieDetails">
+    
+    <div style="border: 1px solid #bdbdbd" class="container text-center my-5">
+        <div style="background-color: rgb(32, 31, 31)" class="row">
+            <div class="col">
+                <h1 style="color: white" class="text-center">
+                    Pre-fill Movie Details
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Location</h6>
+                <input asp-for="@Model.Location"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Owner</h6>
+                <input asp-for="@Model.Owner"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Date</h6>
+                <input asp-for="@Model.PurchasedDate" type="date" id="Date" style="
+                       border: 1px solid #bdbdbd;
+                       border-radius: 0.5rem;
+                       width: 70%;
+                       height: calc(1.25rem + 10px)" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Store</h6>
+                <input asp-for="@Model.PurchaseStore"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="text"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Purchased Price</h6>
+                <input asp-for="@Model.PurchasePrice"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="number"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Quantity</h6>
+                <input asp-for="@Model.Quantity"
+                       style="
+              border: 1px solid #bdbdbd;
+              border-radius: 0.5rem;
+              width: 70%;
+              height: calc(1.25rem + 10px)"
+                       type="number"
+                       class="text-field__input" />
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <div class="form-group">
+                    <h6>Viewed?</h6>
+                    <label class="switch">
+                        <input asp-for="@Model.Seen" type="checkbox" name="Seen" value="true">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 my-2">
+                <h6>Comments</h6>
+                @if (Model.Comments == null)
+                {
+                    <textarea asp-for="@Model.Comments"
+                          style="
+                          border: 1px solid #bdbdbd;
+                          border-radius: 0.5rem;
+                          width: 100%;
+                          type="textarea"
+                          class="textarea">
+                            </textarea>
+                }
+                else
+                {
+                    <textarea asp-for="@Model.Comments"
+                          rows="@(((Model.Comments.Length / 45) + 1))"
+                          style="
+                          border: 1px solid #bdbdbd;
+                          border-radius: 0.5rem;
+                          width: 100%;
+                          type="textarea"
+                          class="textarea">
+                            </textarea>
+                }
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4 offset-sm-6 offset-lg-6 offset-xl-8 my-5">
+
+                <input type="submit" class="btn btn-success w-100" value="Add to Collection" />
+                
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />    
+}
+

@@ -1,0 +1,293 @@
+﻿@model MyMovieCollection.Models.HomeVM
+@using MyMovieCollection.Models
+
+<style>    
+    
+     body {
+        background-color: #DCDCDC
+        
+    }
+    
+    
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+   
+    .filter {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+
+
+
+</style> 
+
+<body>
+    @if (User.IsInRole(WC.UserRole))
+    {
+        <nav class="navbar bg-dark">
+            <form class="container-fluid justify-content-start">       
+                    <button class="btn btn-outline-secondary tablinks" title="TableView" type="button" onclick="openTab(event, 'TabView')">
+                        <i class="fa-solid fa-list"></i>
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-outline-secondary" title="CardView" type="button" onclick="openTab(event, 'CardView')"><i class="fa-duotone fa-bars"></i></button>&nbsp;&nbsp;
+                    <button class="btn btn-outline-secondary tablinks" title="PosterView" type="button" onclick="openTab(event, 'PosterView')"
+                        id="defaultOpen"><i class="fa-solid fa-grid-2"></i>
+                    </button>&nbsp;&nbsp;                
+                <div class="dropdown" id="dropItem">
+                    <button class="btn btn-dark dropdown-toggle filter-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Genres Filter 
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                
+                        <li><a class="dropdown-item filter-button" onclick="filterSelection('all')">ALL</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var obj in Model.GList)
+                        {
+                    
+                            <li><a class="dropdown-item filter-button" onclick="filterSelection('@obj')">@obj</a></li>
+                        }            
+                    </ul>
+                </div>
+            </form>
+        </nav>
+        
+        @if (Model.MovieDetail != null && Model.MovieDetail.Any())
+        {
+            <div style="border: 1px solid #bdbdbd" id="PosterView" class="tabcontent text-center">                
+                <div class="card-group">
+                @foreach (var movie in Model.MovieDetail)
+                {                
+                    <partial name="_MovieCard" model="movie" />                
+                }
+                </div>
+            </div>
+            <div style="border: 1px solid #bdbdbd" id="CardView" class="tabcontent">
+                <div class="row my-1">
+                    @foreach (var movie in Model.MovieDetail)
+                    {                   
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12 filter @movie.Genres">
+                            <div class="card mb-1">
+                                <div class="row g-0">
+                                    <div class="col-3">
+                                        <img src="@movie.PosterUrl" class="img-fluid rounded-start" alt="@movie.Title" />
+                                    </div>                                    
+                                    <div class="col-9">                                        
+                                            <div class="row">
+                                                <div class="col-8 offset-1">
+                                                    <h6 class="card-title">@movie.Title</h6>
+                                                </div>
+                                                <div class="col-3">
+                                                <small style="background-color:#FFBF00;">@movie.ImdbRate</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5 offset-1">
+                                                    <small>@movie.ReleasDate.Year</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5 offset-1">
+                                                    <small class="text-muted">@movie.DurationTime m</small>
+                                                </div>
+                                                <div class="col-3 offset-lg-3 offset-md-2 offset-3">
+                                                    @if (movie.Seen)
+                                                {
+                                                    <span style="color: green; ">
+                                                        <i class="fa-solid fa-square-check fa-2x"></i>
+                                                    </span>
+                                                }
+                                                </div>
+                                            <a asp-action="MovieDetailsView" asp-route-id="@movie.Id" class="stretched-link"></a>
+                                            </div>                          
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>            
+            
+            <div style="border: 1px solid #bdbdbd" id="TabView" class="tabcontent text-center">                
+                <table id="MovieTab" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Seen</th>
+                            <th>Title</th>
+                            <th>Release Year</th>
+                            <th><img src="/img/Imdb.png" width="40px"> </th>
+                            <th>Genres</th>
+                            <th>Duration Time</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.MovieDetail)
+                        {
+                            <tr>
+                                <td>
+                                    <span hidden>@obj.Seen</span>
+                                    @if (obj.Seen)
+                                    {
+                                        <span style="color:Green"><i class="fas fa-check"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:Red"><i class="far fa-times"></i></span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="MovieDetailsView" asp-route-id="@obj.Id">@obj.Title</a>                            
+                                </td>
+                                    <td>@obj.ReleasDate.Year</td>
+                                    <td> <h6 style="background-color:#FFBF00;">@obj.ImdbRate</h6></td>
+                                    <td>@obj.Genres</td>
+                                    <td>@obj.DurationTime min</td>
+                            </tr>
+                        }
+                                             
+                    </tbody>
+                </table>
+
+            </div>
+    
+            }
+        else
+            {
+                <h2 class="text-center my-5" > Your movie collection is empty, <a asp-controller ="AddMovie" asp-action="Index">ADD</a> your first movie </h2>
+            }
+    }
+    else
+    {
+        <div class="container text-center">
+            <div class="my-3 mx-3">
+                <h4>This service intended to create your movie collection.</h4>
+                <h4>For use please <a asp-area="Identity" asp-page="/Account/Register">Register</a> or <a asp-area="Identity" asp-page="/Account/Login"> Login</a></h4>
+                <img src="~/img/logo_main.png" width="400" height="400" />
+            </div>
+        </div>
+    }
+</body>
+
+
+@section Scripts{
+   
+    @*Filtering*@
+    <script>
+        filterSelection("all")
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("filter");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                Remove(x[i], "show");
+                if (x[i].className.indexOf(c) > -1) Add(x[i], "show");
+            }
+        }
+
+        function Add(element, name) {
+            var i, arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (i = 0; i < arr2.length; i++) {
+                if (arr1.indexOf(arr2[i]) == -1) { element.className += " " + arr2[i]; }
+            }
+        }
+
+        function Remove(element, name) {
+            var i, arr1, arr2;
+            arr1 = element.className.split(" ");
+            arr2 = name.split(" ");
+            for (i = 0; i < arr2.length; i++) {
+                while (arr1.indexOf(arr2[i]) > -1) {
+                    arr1.splice(arr1.indexOf(arr2[i]), 1);
+                }
+            }
+            element.className = arr1.join(" ");
+        }
+
+        var btnContainer = document.getElementById("dropItem");
+        var btns = btnContainer.getElementsByClassName("filter-button");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function () {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+            });
+        }
+    </script>
+
+    @*TabView*@
+    <script>
+        window.onload = function savedTab() {
+            if (localStorage.getItem("Tab") != null) {
+                var tabName = localStorage.getItem("Tab");
+                document.getElementById(tabName).click();
+                openTab(event, tabName);
+            }
+        }
+
+        if (localStorage.getItem("Tab") == null) {
+            document.getElementById("defaultOpen").click();
+        }
+        function openTab(evt, tabName) {            
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+            localStorage.setItem("Tab", tabName);
+        }
+        
+    </script>
+    @*Table*@
+    <script>
+        $(document).ready(function () {
+            $('#MovieTab').DataTable();
+        });
+    </script>
+}
+    
+

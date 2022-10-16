@@ -1,0 +1,71 @@
+﻿@model MyMovieCollection.Models.ViewModels.SearchResultsVM
+
+<style>
+     body {
+        background-color: #DCDCDC
+
+    }
+</style>
+
+<body>
+    @if (Model.Id.Count == 0)
+    {
+        <div class="col-lg-6 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1 text-center my-4">
+            <h4>No Result found!</h4>
+            <a asp-action="Index" class="btn btn-dark" type="button">Back to Search</a>
+        </div>
+    }
+    else
+    {
+        @for (int i = 0; i < Model.Title.Count; i++)
+        {
+            <form method="post">
+
+                <div class="row pt-3">
+                    <div class="col-lg-6 offset-lg-4 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+                        <div class="card" style="width: auto">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src="@Model.PosterUrl[i]"
+                                 width="122"
+                                 height="190"
+                                 class="card-img-left"
+                                 alt="Poster" />
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-7 col-7 offset-md-2 offset-sm-2 offset-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@Model.Title[i] (@Model.ReleasDate[i].Year)</h5>
+                                        <p class="card-text">
+                                            @Model.Description[i]
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col text-center my-1">
+                                    @if (Model.ExistId.Contains(Model.Id[i]))
+                                    {
+                                        <button class="btn btn-warning" disabled
+                                    style="position: relative;">
+                                            &nbsp; In Collection
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button asp-action="AddDetail" asp-route-id="@Model.Id[i]" class="btn btn-primary"
+                                    style="position: relative;">
+                                            <i class="fa-solid fa-plus"></i>&nbsp;Add to Collection
+                                        </button>
+                                    }
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+    }
+
+</body>
+
+
+

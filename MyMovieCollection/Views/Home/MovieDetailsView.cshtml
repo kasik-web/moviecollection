@@ -1,0 +1,259 @@
+﻿@model MyMovieCollection.Models.MovieDetails
+
+    <style>
+    body {
+        background-image: url(@Model.BackdropUrl);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;        
+    }
+    <style>
+
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #e0e0e0;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            -webkit-animation: fadeEffect 1s;
+            animation: fadeEffect 1s;
+        }      
+    </style>  
+   
+<body>   
+        <nav class="navbar bg-dark">
+            <form class="container-fluid justify-content-start">
+                <a asp-action="Index" class="btn btn-outline-secondary" type="button">
+                    <span style="color:grey"><i class="fa-solid fa-left"></i></span> Back
+                </a>&nbsp;
+
+                <a asp-action="Edit" asp-route-id="@Model.Id"
+                        type="button"
+                        class="btn btn-outline-secondary">                
+                        <span style="color:grey"><i class="fa-solid fa-pen"></i></span> Edit
+                </a>&nbsp;
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#ConfirmDel">
+                    <span style="color:grey"><i class="fa-duotone fa-trash"></i></span> Remove from Collection
+                </button>
+            </form>
+        </nav>
+
+        <div style="background-color:rgba(244, 238, 238, 0.85); text-align: center;" class="container  mx-20">
+            <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                    <div class="col-md-10 offset-md-1 offset-lg-2 col-sm-12 offset-sm-0">
+                        <strong>
+                            <h1 style="color:darkslategray">@Model.Title</h1>
+                        </strong>
+                        <img src="@Model.PosterUrl"
+                             alt="Poster"
+                             height="370"
+                             width="264"
+                              />
+                    </div>
+                </div>
+                <div class="col-lg-6 offset-lg-1 col-md-10 col-sm-12 offset-md-1">
+                    <br></br>
+                    <div style="text-align:left" class="col-12">
+                        @if (Model.Company == null)
+                        {
+                            <h4>
+                                 (@Model.ReleasDate.Year/@Model.ReleasDate.Month)
+                            </h4>
+                        }
+                        else
+                        {
+                            <h4>@Model.Company (@Model.ReleasDate.Year/@Model.ReleasDate.Month)</h4>
+                        }
+                        <div class="row">
+                            <div class="col">
+                                @if (Model.Director != null)
+                                {
+
+                                <h5 style="color:darkslategray">Director: @Model.Director</h5>
+
+                                }
+                            <div><strong style="background-color:#FFBF00;">IMDb @Model.ImdbRate</strong></div>
+                        
+                        </div>
+                        @if (Model.Genres == null)
+                        {}
+                        else
+                        {                            
+                            <small>@Model.Genres</small>                             
+                        }
+                    
+                        @if (Model.Country == null)
+                        {
+                            <small>
+                            | @Model.OriginalLang | @Model.DurationTime min.
+                            </small>
+                        }
+                        else
+                        {
+                            <small>@Model.Country | @Model.OriginalLang | @Model.DurationTime min.</small>
+                        }
+                        <br></br>
+                        <h6 style="color:darkslategray">Cast:</h6>
+                        <p>@Model.Actors</p>
+                        <br></br>
+
+                        <p style="font-size: 8;">
+                            @Model.Description
+                        </p>
+                    </div>
+                </div>
+                @*<div class="col">
+                    <div class="col-1 offset-lg-4 offset-md-4 offset-sm-4">                        
+                        
+                        @if (Model.Seen)
+                        {
+                        <span style="color:Green"><i class="fa-solid fa-check fa-3x"></i></span>
+                        }
+                        
+                    </div>
+                </div>*@
+            </div>
+
+            <div class="row my-5">
+                <div class="col-lg-12">
+                    <iframe width="420" height="280" src="@Model?.TrailerUrl"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>            
+
+            <div class="row">
+            <div class="col-lg-6 col-md-12 my-3">
+                    <h2 style="color:darkslategray">Personal</h2>
+                    <ul class="list-group list-group-horizontal list-group-success">
+                        <li class="list-group-item list-group-item-dark col-4"><h5 class="my-3">Purchased</h5></li>
+                        <li class="list-group-item list-group-item-dark col-8"><h5 class="my-3">@Model.PurchasedDate.ToShortDateString() for @Model.PurchasePrice$ in @Model.PurchaseStore<h5></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal list-group-success">
+                        <li class="list-group-item col-4"><h5 class="my-3">Quantity</h5></li>
+                        <li class="list-group-item col-8"><h5 class="my-3">@Model.Quantity</h5></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal list-group-success">
+                            <li class="list-group-item list-group-item-dark col-4"><h5 class="my-3">Viewed?</h5></li>
+                        @if (Model.Seen)
+                        {
+                            <li class="list-group-item list-group-item-dark col-8"><h5 class="my-3">Yes</h5></li>
+                        }
+                        else
+                        {
+                           <li class="list-group-item list-group-item-dark col-8 text-center"><h5 class="my-3">No</h5></li> 
+                        }                        
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-12 my-3">
+                
+                        @if (Model.Comments != null)
+                        {
+                            <h2 style="color:darkslategray">Comment</h2>
+                            <textarea asp-for="@Model.Comments"
+                                  rows="@(((Model.Comments.Length / 45) + 1))"
+                                  readonly
+                                  style="
+                                  border: 1px solid #bdbdbd;
+                                  border-radius: 0.5rem;
+                                  width: 100%;
+                                  type="textarea"
+                                  class="textarea">
+                                      </textarea>
+                        }
+                        
+                </div>
+            </div>    
+        </div>
+    
+
+        <div class="modal fade"
+             id="ConfirmDel"
+             tabindex="-1"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5  class="modal-title" id="exampleModalLabel">
+                            Confirm your action
+                        </h5>                    
+                    </div>
+                    <div class="modal-body">Are you sure you want to remove the movie from the collection?</div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            No, Cancel
+                        </button>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" type="button" class="btn btn-danger">
+                            YES, Remove
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>  
+  
+
+
+@section Scripts{
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        
+        document.getElementById("defaultOpen").click();
+    </script>
+}
